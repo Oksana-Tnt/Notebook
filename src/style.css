@@ -17,3 +17,23 @@ body {
   background-color: antiquewhite;
   padding: 20px;
 }
+.btn-delete{
+ 
+  border: none;
+  outline: none;
+  width: 16px;
+  height: 18px;
+  background-image: url("./images/trash.svg");
+ 
+}
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+.icon-trash {
+  width: 0.7861328125em;
+}

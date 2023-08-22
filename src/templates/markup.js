@@ -3,7 +3,7 @@ function markupForm() {
     <form class="form" id="form">
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
     <button type="button" class="btn-close" aria-label="Close" id="btnClose"></button>
-    </div>
+    </div>    
     <div class="mb-3">
     <label for="formGroupExampleInput" class="form-label">Name</label>
     <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Input name of note" name="name">
@@ -35,11 +35,28 @@ function markupNote({name, created, category, content}) {
     return `
     <tr>
         <td>${name}</td>
-        <td>${created}}</td>
+        <td>${created}</td>
         <td>${category}</td>
         <td>${content}</td>
       </tr>
   `
-}
+};
 
-export{markupForm, markupNote}
+function markupAllNotebook(arr=[]){
+  return arr.map(({name, created, category, content}) => `
+    <tr>    
+    <td>${name}</td>
+    <td>${created}</td>
+    <td>${category}</td>
+    <td>${content}</td>
+    <td>
+    <button type="button" class="btn-delete">  
+    
+    </button>
+    </td>     
+  </tr>  
+  `).join('')
+};
+export{markupForm, markupNote, markupAllNotebook}
+
+
