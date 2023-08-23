@@ -43,17 +43,19 @@ function markupNote({name, created, category, content}) {
 };
 
 function markupAllNotebook(arr=[]){
-  return arr.map(({name, created, category, content}) => `
-    <tr>    
+  return arr.map(({id, name, created, category, content}) => `
+    <tr class="item" data-id="${id}">    
     <td>${name}</td>
     <td>${created}</td>
     <td>${category}</td>
     <td>${content}</td>
-    <td>
+  <td>
     <button type="button" class="btn-delete">  
-    
-    </button>
-    </td>     
+    <svg width="16" height="16"> 
+      <use href="../images/trash.svg"></use>
+    </svg>    
+    </button> 
+   </td> 
   </tr>  
   `).join('')
 };

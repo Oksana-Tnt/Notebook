@@ -16,6 +16,7 @@ const tableEl = document.querySelector(".table");
 
 btnElAdd.addEventListener("click", onShowForm);
 window.addEventListener("load", init);
+tableEl.addEventListener("click", onDeleteNote);
 
 
 
@@ -92,7 +93,8 @@ function onAddNote(event) {
    for (let [name, value] of formData) {
     formDataObj[name] = value;
   }
-  
+
+   
   tableEl.insertAdjacentHTML("beforeend", markupNote(formDataObj));
 
   setToLocal(formDataObj);
@@ -105,5 +107,19 @@ function init(){
   if (!array.length) return;
 
   tableEl.insertAdjacentHTML("beforeend", markupAllNotebook(array));
+
 }
 
+function onDeleteNote(event) {
+  if (!event.target.classList.contains("btn-delete")) return;
+  
+  const parentEl = event.target.closest(".item");
+  const idToFind = parentEl.dataset.id;
+  
+
+  parentEl.remove();
+
+  const filteredArr = getStatus().filter(({ id }) => id !== idToFind);
+
+  saveNewData(filteredArr);
+}
