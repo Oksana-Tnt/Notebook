@@ -17,6 +17,7 @@ const tableEl = document.querySelector(".table");
 btnElAdd.addEventListener("click", onShowForm);
 window.addEventListener("load", init);
 tableEl.addEventListener("click", onDeleteNote);
+tableEl.addEventListener("click", onEditNote);
 
 
 
@@ -44,35 +45,6 @@ function onShowForm(){
   createFlarpicker(inputEl);   
     
 }
-
-function createFlarpicker(element) {
-  
-  const options = {
-    enableTime: true,
-    dateFormat: "Y-m-d H:i",
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-        onClose(selectedDates) {  
-
-        const fpDate=selectedDates[0];
-
-        fp = flatpickr.formatDate(fpDate, "Y-m-d h:i K");
-
-        if((selectedDates[0]).getTime() < Date.now()){
-            Notiflix.Report.warning("Please choose a date in the future");           
-             return;
-        }            
-        
-        Notiflix.Notify.success("Well done");           
-    
-    },
-}; 
-
-flatpickr(element, options);
-
-};
-
 
 function onCloseForm() {
 
@@ -123,3 +95,41 @@ function onDeleteNote(event) {
 
   saveNewData(filteredArr);
 }
+
+function onEditNote (event){
+  if (!event.target.classList.contains("btn-edit")) return;
+
+  const editNoteObj = event.target.closest(".item").children;
+
+  for (note of editNoteObj) {
+    console.log(note.innerText);
+ }
+}
+
+function createFlarpicker(element) {
+  
+  const options = {
+    enableTime: true,
+    dateFormat: "Y-m-d H:i",
+    time_24hr: true,
+    defaultDate: new Date(),
+    minuteIncrement: 1,
+        onClose(selectedDates) {  
+
+        const fpDate=selectedDates[0];
+
+        fp = flatpickr.formatDate(fpDate, "Y-m-d h:i K");
+
+        if((selectedDates[0]).getTime() < Date.now()){
+            Notiflix.Report.warning("Please choose a date in the future");           
+             return;
+        }            
+        
+        Notiflix.Notify.success("Well done");           
+    
+    },
+}; 
+
+flatpickr(element, options);
+
+};

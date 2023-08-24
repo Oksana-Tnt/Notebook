@@ -24,7 +24,7 @@ body {
   outline: none;
   background-color: transparent;
   border-radius: 50%;
-  /* background-image: url("./images//trash.svg"); */
+  background-image: url(./images/trash.svg);
 
  }
 
@@ -32,8 +32,21 @@ body {
   background-color: gainsboro;
  }
 
- .svg-icon{
-  
- }
+ .btn-edit{
+  width: 16px;
+  height: 18px;
+   border: none;
+   outline: none;
+   background-color: transparent;
+   border-radius: 50%;
+   background-image: url(./images/pencil.svg);
+ 
+  }
+ 
+  .btn-edit:hover{
+   background-color: gainsboro;
+  }
+
+
 
 
