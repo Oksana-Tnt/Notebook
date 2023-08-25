@@ -6,7 +6,7 @@ import "flatpickr/dist/flatpickr.min.css";
 import Notiflix from 'notiflix';
 import { uid } from "uid";
 
-import { markupForm, markupNote, markupAllNotebook } from "./templates/markup";
+import { markupForm, markupNote, markupNotes } from "./templates/markup";
 import { setToLocal, getStatus, saveNewData } from "./api";
 
 
@@ -23,9 +23,17 @@ tableEl.addEventListener("click", onEditNote);
 
 let instance;
 let formDataObj = {};
-let formData = 0;
 let fp = 0;
 
+
+function init(){
+  const array = getStatus();
+  if (!array.length) return;
+  const markup = markupNotes(array);
+  
+  addMarkup(markup);
+
+}
 
 function onShowForm(){
 
@@ -35,14 +43,11 @@ function onShowForm(){
   const btnElClose = document.getElementById("btnClose");
   btnElClose.addEventListener("click", onCloseForm);
 
-  formData = new FormData(document.querySelector("#form"));
-   
-  const formEl = document.getElementById("form");
-  formEl.addEventListener("submit", onAddNote);
+  const flatpickerEl = document.querySelector(".js-flatpicker");
 
-  const inputEl = document.getElementById("formGroupExampleInput2");  
-
-  createFlarpicker(inputEl);   
+  createFlatpicker(flatpickerEl);
+     
+  form.addEventListener("submit", onAddNote);
     
 }
 
@@ -56,57 +61,81 @@ function onAddNote(event) {
 
   event.preventDefault(); 
 
-  formData.set("id", uid());
-  formData.set("name", event.target.elements.name.value);
-  formData.set("created", fp);
-  formData.set("content", event.target.elements.content.value);
-  formData.set("category", event.target.elements.category.value);
+  const name = event.target.elements.name.value;
+  const created = fp;
+  const category = event.target.elements.category.value;
+  const content = event.target.elements.content.value;  
 
-   for (let [name, value] of formData) {
-    formDataObj[name] = value;
-  }
+  const noteObj = createNoteObj(name, created, category, content); 
 
-   
-  tableEl.insertAdjacentHTML("beforeend", markupNote(formDataObj));
+  const markup = markupNote(noteObj);
 
-  setToLocal(formDataObj);
+  addMarkup(markup); 
+
+  setToLocal(noteObj);
 
   instance.close();
-}
-
-function init(){
-  const array = getStatus();
-  if (!array.length) return;
-
-  tableEl.insertAdjacentHTML("beforeend", markupAllNotebook(array));
 
 }
+
 
 function onDeleteNote(event) {
   if (!event.target.classList.contains("btn-delete")) return;
-  
-  const parentEl = event.target.closest(".item");
-  const idToFind = parentEl.dataset.id;
-  
 
-  parentEl.remove();
+    deleteEl(event.target.closest(".item"));
+  
+}
+
+function onEditNote(event) {
+  
+  if (!event.target.classList.contains("btn-edit")) return;  
+  
+  const parentNode = event.target.closest(".item");
+  const name = parentNode.querySelector(".name").textContent;
+  const content = parentNode.querySelector(".content").textContent;
+
+  deleteEl(parentNode);
+
+  instance = basicLightbox.create(markupForm(name, content));    
+  instance.show();  
+  
+  const btnEl = document.querySelector(".js-btn");
+  btnEl.textContent = "Edit note";
+
+  const flatpickerEl = document.querySelector(".js-flatpicker");
+  createFlatpicker(flatpickerEl);
+
+  form.addEventListener("submit", onAddNote);  
+
+};
+
+function deleteEl(element) {
+
+  const parentEl = element;
+  const idToFind = element.dataset.id;  
+
+  element.remove();
 
   const filteredArr = getStatus().filter(({ id }) => id !== idToFind);
 
   saveNewData(filteredArr);
 }
 
-function onEditNote (event){
-  if (!event.target.classList.contains("btn-edit")) return;
+function createNoteObj(name, created, category, content) {
+  return {
+    id:uid(),
+    name,
+    created,
+    category,
+    content
+  };
+}   
 
-  const editNoteObj = event.target.closest(".item").children;
-
-  for (note of editNoteObj) {
-    console.log(note.innerText);
- }
+function addMarkup(arr) {
+  tableEl.insertAdjacentHTML("beforeend", arr);
 }
 
-function createFlarpicker(element) {
+function createFlatpicker(element) {
   
   const options = {
     enableTime: true,
